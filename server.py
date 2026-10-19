@@ -9,20 +9,24 @@ app = Flask("Emotion Detector")
 @app.route("/emotionDetector")
 def emo_detector():
     """
-    Ruta para procesar el texto y devolver las emociones detectadas.
+    Ruta para procesar el texto y devolver las emociones detectadas
+    o un mensaje de error si la entrada es inválida.
     """
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
 
-    # Extraer variables
+    dominant_emotion = response['dominant_emotion']
+
+    # Si la emoción dominante es None (entrada en blanco o inválida)
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
+
     anger = response['anger']
     disgust = response['disgust']
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
-    dominant_emotion = response['dominant_emotion']
 
-    # Formato de respuesta requerido por la interfaz web
     return (
         f"For the given statement, the system response is 'anger': {anger}, "
         f"'disgust': {disgust}, 'fear': {fear}, 'joy': {joy} and 'sadness': {sadness}. "
@@ -32,7 +36,7 @@ def emo_detector():
 @app.route("/")
 def render_index_page():
     """
-    Renderiza la página principal.
+    Renderiza la página web principal.
     """
     return render_template('index.html')
 
