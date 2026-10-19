@@ -1,23 +1,23 @@
 """
-Servidor Flask para la aplicación de detección de emociones.
+Servidor Flask para el despliegue del detector de emociones.
 """
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask("Emotion Detector")
 
+
 @app.route("/emotionDetector")
 def emo_detector():
     """
-    Ruta para procesar el texto y devolver las emociones detectadas
-    o un mensaje de error si la entrada es inválida.
+    Procesa la solicitud GET para analizar el texto recibido
+    y devuelve la respuesta formateada con las emociones.
     """
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
 
     dominant_emotion = response['dominant_emotion']
 
-    # Si la emoción dominante es None (entrada en blanco o inválida)
     if dominant_emotion is None:
         return "Invalid text! Please try again!"
 
@@ -33,12 +33,15 @@ def emo_detector():
         f"The dominant emotion is {dominant_emotion}."
     )
 
+
 @app.route("/")
 def render_index_page():
     """
-    Renderiza la página web principal.
+    Renderiza la interfaz de usuario en la pagina principal.
     """
     return render_template('index.html')
 
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    
